@@ -2,8 +2,7 @@
 name = "rcli"
 version = "0.1.0"
 edition = "2021"
-about = "rust cli project"
-author = "akuowen"
+authors = ["akuowen"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
