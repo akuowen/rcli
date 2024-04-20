@@ -1,0 +1,2 @@
+# rcli
+rust cli project
