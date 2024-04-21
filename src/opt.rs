@@ -1,5 +1,5 @@
 use clap::Parser;
-use core::fmt;
+use core::{fmt, str};
 use std::{path::Path, str::FromStr};
 /*
   see {@link https://docs.rs/clap/latest/clap/_derive/_tutorial/chapter_0/index.html}
@@ -16,6 +16,23 @@ pub struct RCli {
 pub enum SubCommand {
     #[command(name = "csv", about = "convert or show csv file ")]
     Csv(Commands),
+
+    #[command(name = "genpasswd", about = "generator password")]
+    GenPass(GenPassOps),
+}
+
+#[derive(Debug, Parser)]
+pub struct GenPassOps {
+    #[arg(long, default_value_t = 16)]
+    pub length: u8,
+    #[arg(long, default_value_t = true)]
+    pub uppercase: bool,
+    #[arg(long, default_value_t = true)]
+    pub lowercase: bool,
+    #[arg(long, default_value_t = true)]
+    pub number: bool,
+    #[arg(long, default_value_t = true)]
+    pub symbol: bool,
 }
 
 #[derive(Debug, Parser)]

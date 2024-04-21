@@ -16,6 +16,9 @@ fn main() -> anyhow::Result<()> {
             };
             process_csv(&cli.input, output.as_str(), cli.format)?
         }
+        SubCommand::GenPass(cli) => {
+            println!("generator pass {:?}", cli)
+        }
     }
     Ok(())
 }
