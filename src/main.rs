@@ -1,4 +1,4 @@
-use rcli::{process_csv, RCli, SubCommand};
+use rcli::{process_csv, process_passgen, RCli, SubCommand};
 
 use clap::Parser;
 
@@ -17,7 +17,9 @@ fn main() -> anyhow::Result<()> {
             process_csv(&cli.input, output.as_str(), cli.format)?
         }
         SubCommand::GenPass(cli) => {
-            println!("generator pass {:?}", cli)
+            process_passgen(&cli)?;
+
+            // println!("generator pass {:?}", cli)
         }
     }
     Ok(())
