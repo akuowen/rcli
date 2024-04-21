@@ -1,11 +1,10 @@
-use std::fs;
 use csv::Reader;
 use serde::{Deserialize, Serialize};
+use std::fs;
 
-
-#[derive(Debug,Deserialize,Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
-struct Player{
+struct Player {
     name: String,
     position: String,
     #[serde(rename = "DOB")]
