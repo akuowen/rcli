@@ -1,39 +1,6 @@
+use std::{fmt, path::Path, str::FromStr};
+
 use clap::Parser;
-use core::{fmt, str};
-use std::{path::Path, str::FromStr};
-/*
-  see {@link https://docs.rs/clap/latest/clap/_derive/_tutorial/chapter_0/index.html}
-   rCli csv -i filePath -o  xxx --header -d ''
-*/
-#[derive(Parser, Debug)]
-#[command(name = "rCli",version, about,author, long_about = None)]
-pub struct RCli {
-    #[command(subcommand)]
-    pub command: SubCommand,
-}
-
-#[derive(Debug, Parser)]
-pub enum SubCommand {
-    #[command(name = "csv", about = "convert or show csv file ")]
-    Csv(Commands),
-
-    #[command(name = "genpasswd", about = "generator password")]
-    GenPass(GenPassOps),
-}
-
-#[derive(Debug, Parser)]
-pub struct GenPassOps {
-    #[arg(long, default_value_t = 16)]
-    pub length: u8,
-    #[arg(long, default_value_t = true)]
-    pub uppercase: bool,
-    #[arg(long, default_value_t = true)]
-    pub lowercase: bool,
-    #[arg(long, default_value_t = true)]
-    pub number: bool,
-    #[arg(long, default_value_t = true)]
-    pub symbol: bool,
-}
 
 #[derive(Debug, Parser)]
 pub struct Commands {
@@ -51,6 +18,14 @@ pub struct Commands {
     pub format: Format,
 }
 
+fn verity_input_path(file_path: &str) -> Result<String, &'static str> {
+    if Path::new(file_path).exists() {
+        Ok(file_path.into())
+    } else {
+        Err("file does not exists")
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 pub enum Format {
     Json,
@@ -59,14 +34,6 @@ pub enum Format {
 
 fn format_parse(file_format: &str) -> Result<Format, anyhow::Error> {
     file_format.parse().map_err(|e: anyhow::Error| e)
-}
-
-fn verity_input_path(file_path: &str) -> Result<String, &'static str> {
-    if Path::new(file_path).exists() {
-        Ok(file_path.into())
-    } else {
-        Err("file does not exists")
-    }
 }
 
 impl From<Format> for &'static str {

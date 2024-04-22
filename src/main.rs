@@ -1,6 +1,5 @@
-use rcli::{process_csv, process_passgen, RCli, SubCommand};
-
 use clap::Parser;
+use rcli::{process_csv, process_passgen, RCli, SubCommand};
 
 fn main() -> anyhow::Result<()> {
     let cli: RCli = RCli::parse();

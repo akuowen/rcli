@@ -1,5 +1,4 @@
-mod opt;
+mod cli;
 mod process;
-
-pub use opt::{GenPassOps, RCli, SubCommand};
+pub use cli::{RCli, SubCommand};
 pub use process::{process_csv, process_passgen};

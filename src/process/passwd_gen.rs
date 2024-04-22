@@ -1,6 +1,7 @@
-use crate::opt::GenPassOps;
 use rand::seq::SliceRandom;
 use zxcvbn::zxcvbn;
+
+use crate::cli::GenPassOps;
 
 const UPPER: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const LOWER: &[u8] = b"abcdefghijklmnopqrstuvwxyz";
