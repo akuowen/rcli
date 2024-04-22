@@ -1,12 +1,10 @@
 use std::fs;
 
+use crate::cli::Format;
+use anyhow::Result;
 use csv::Reader;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-
-use anyhow::Result;
-
-use crate::cli::Format;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]

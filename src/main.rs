@@ -20,6 +20,7 @@ fn main() -> anyhow::Result<()> {
 
             // println!("generator pass {:?}", cli)
         }
+        SubCommand::Base64(_) => todo!(),
     }
     Ok(())
 }

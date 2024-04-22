@@ -1,6 +1,8 @@
+mod b64;
 mod csv_opt;
 mod gen_passwd;
 
+pub use b64::B64Ops;
 use clap::Parser;
 pub use csv_opt::Commands;
 pub use csv_opt::Format;
@@ -20,4 +22,7 @@ pub enum SubCommand {
 
     #[command(name = "genpasswd", about = "generator password")]
     GenPass(GenPassOps),
+
+    #[command(subcommand)]
+    Base64(B64Ops),
 }
