@@ -30,6 +30,7 @@ fn verity_input_path(file_path: &str) -> Result<String, &'static str> {
 pub enum Format {
     Json,
     Yaml,
+    Toml,
 }
 
 fn format_parse(file_format: &str) -> Result<Format, anyhow::Error> {
@@ -41,6 +42,7 @@ impl From<Format> for &'static str {
         match value {
             Format::Json => "json",
             Format::Yaml => "yaml",
+            Format::Toml => "toml",
         }
     }
 }
@@ -52,6 +54,7 @@ impl FromStr for Format {
         match s {
             "json" => Ok(Format::Json),
             "yaml" | "yml" => Ok(Format::Yaml),
+            "toml" => Ok(Format::Toml),
             _ => anyhow::bail!("not support format"),
         }
     }

@@ -3,7 +3,13 @@ use std::fs;
 use crate::cli::Format;
 use anyhow::Result;
 use csv::Reader;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
+
+#[derive(Serialize, Deserialize)]
+struct Data {
+    data: Vec<Value>,
+}
 
 pub fn process_csv(input: &str, output: &str, output_format: Format) -> Result<()> {
     let mut reader = Reader::from_path(input)?;
@@ -19,6 +25,10 @@ pub fn process_csv(input: &str, output: &str, output_format: Format) -> Result<(
     let result_content = match output_format {
         Format::Json => serde_json::to_string_pretty(&result_vec)?,
         Format::Yaml => serde_yaml::to_string(&result_vec)?,
+        Format::Toml => {
+            let data = Data { data: result_vec };
+            toml::to_string_pretty(&data)?
+        }
     };
     fs::write(output, result_content)?;
     Ok(())
