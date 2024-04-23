@@ -1,5 +1,5 @@
 use clap::Parser;
-use rcli::{process_csv, process_passgen, RCli, SubCommand};
+use rcli::{process_base64, process_csv, process_passgen, RCli, SubCommand};
 
 fn main() -> anyhow::Result<()> {
     let cli: RCli = RCli::parse();
@@ -20,7 +20,9 @@ fn main() -> anyhow::Result<()> {
 
             // println!("generator pass {:?}", cli)
         }
-        SubCommand::Base64(_) => todo!(),
+        SubCommand::Base64(b64_opts) => {
+            process_base64(&b64_opts)?;
+        }
     }
     Ok(())
 }

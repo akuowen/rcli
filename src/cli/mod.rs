@@ -2,7 +2,9 @@ mod b64;
 mod csv_opt;
 mod gen_passwd;
 
-pub use b64::B64Ops;
+use std::path::Path;
+
+pub use b64::{B64Format, B64Ops};
 use clap::Parser;
 pub use csv_opt::Commands;
 pub use csv_opt::Format;
@@ -25,4 +27,13 @@ pub enum SubCommand {
 
     #[command(subcommand)]
     Base64(B64Ops),
+}
+
+fn verify_input_file(filename: &str) -> Result<String, &'static str> {
+    // if input is "-" or file exists
+    if filename == "-" || Path::new(filename).exists() {
+        Ok(filename.into())
+    } else {
+        Err("File does not exist")
+    }
 }

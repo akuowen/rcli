@@ -1,5 +1,6 @@
 use std::{fmt, str::FromStr};
 
+use super::verify_input_file;
 use clap::Parser;
 
 #[derive(Debug, Parser)]
@@ -18,7 +19,7 @@ pub enum B64Format {
 
 #[derive(Debug, Parser)]
 pub struct B64DecodeOps {
-    #[arg(short, long)]
+    #[arg(short, long,default_value="-",value_parser=verify_input_file)]
     pub input: String,
     #[arg(long, value_parser = parse_base64_format, default_value = "standard")]
     pub format: B64Format,
@@ -26,18 +27,14 @@ pub struct B64DecodeOps {
 
 #[derive(Debug, Parser)]
 pub struct B64EncodeOps {
-    #[arg(short, long)]
+    #[arg(short, long,default_value="-",value_parser=verify_input_file)]
     pub input: String,
     #[arg(long, value_parser = parse_base64_format, default_value = "standard")]
     pub format: B64Format,
 }
 
 fn parse_base64_format(format: &str) -> Result<B64Format, anyhow::Error> {
-    match format {
-        "standard" => Ok(B64Format::Standard),
-        "urlsafe" => Ok(B64Format::UrlSafe),
-        _ => anyhow::bail!("not support format"),
-    }
+    format.parse()
 }
 
 impl FromStr for B64Format {
