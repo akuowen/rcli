@@ -1,6 +1,7 @@
 mod b64;
 mod csv_opt;
 mod gen_passwd;
+mod text;
 
 use std::path::Path;
 
@@ -9,6 +10,7 @@ use clap::Parser;
 pub use csv_opt::Commands;
 pub use csv_opt::Format;
 pub use gen_passwd::GenPassOps;
+pub use text::{TextFormat, TextOps, TextSignOpts, TextVerifyOpts};
 
 #[derive(Parser, Debug)]
 #[command(name = "rCli",version, about,author, long_about = None)]
@@ -27,6 +29,9 @@ pub enum SubCommand {
 
     #[command(subcommand)]
     Base64(B64Ops),
+
+    #[command(subcommand)]
+    Text(TextOps),
 }
 
 fn verify_input_file(filename: &str) -> Result<String, &'static str> {

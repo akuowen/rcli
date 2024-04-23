@@ -1,5 +1,5 @@
 use clap::Parser;
-use rcli::{process_base64, process_csv, process_passgen, RCli, SubCommand};
+use rcli::{process_base64, process_csv, process_passgen, process_text, RCli, SubCommand};
 
 fn main() -> anyhow::Result<()> {
     let cli: RCli = RCli::parse();
@@ -23,6 +23,7 @@ fn main() -> anyhow::Result<()> {
         SubCommand::Base64(b64_opts) => {
             process_base64(&b64_opts)?;
         }
+        SubCommand::Text(text_opts) => process_text(&text_opts)?,
     }
     Ok(())
 }
