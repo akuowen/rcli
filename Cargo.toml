@@ -7,14 +7,15 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.82"
+anyhow = "1.0.81"
 base64 = "0.22.0"
-clap = { version = "4.5.4", features = ["derive"] }
+blake3 = "1.5.1"
+clap = { version = "4.5.3", features = ["derive"] }
 csv = "1.3.0"
+ed25519-dalek = { version = "2.1.1", features = ["rand_core"] }
 rand = "0.8.5"
-serde = { version = "1.0.198", features = ["derive"] }
-serde_json = "1.0.116"
-serde_yaml = "0.9.34"
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.114"
+serde_yaml = "0.9.33"
 toml = "0.8.12"
-yaml = "0.3.0"
 zxcvbn = "2.2.2"
