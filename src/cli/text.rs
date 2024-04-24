@@ -12,7 +12,7 @@ pub enum TextOps {
 
 #[derive(Debug, Parser)]
 pub struct TextSignOpts {
-    #[arg(short,long,value_parser=verify_file)]
+    #[arg(short,long,value_parser=verify_file,default_value="-")]
     pub input: String,
     #[arg(short,long,value_parser=verify_file)]
     pub key: String,
@@ -69,18 +69,9 @@ impl fmt::Display for TextFormat {
     }
 }
 
-// fn verify_path(path: &str) -> Result<PathBuf, &'static str> {
-//     // if input is "-" or file exists
-//     let p = Path::new(path);
-//     if p.exists() && p.is_dir() {
-//         Ok(path.into())
-//     } else {
-//         Err("Path does not exist or is not a directory")
-//     }
-// }
-
 fn verify_file(filename: &str) -> Result<String, &'static str> {
     // if input is "-" or file exists
+    println!("filename: {}", filename);
     if filename == "-" || Path::new(filename).exists() {
         Ok(filename.into())
     } else {
