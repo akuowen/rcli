@@ -1,8 +1,8 @@
 mod b64;
 mod csv_opt;
 mod gen_passwd;
+mod jwt;
 mod text;
-
 use std::path::Path;
 
 pub use b64::{B64Format, B64Ops};
@@ -10,6 +10,7 @@ use clap::Parser;
 pub use csv_opt::Commands;
 pub use csv_opt::Format;
 pub use gen_passwd::GenPassOps;
+pub use jwt::{JwtOpts, JwtSignOpt, JwtVerifyOpt};
 pub use text::{TextFormat, TextOps, TextSignOpts, TextVerifyOpts};
 
 #[derive(Parser, Debug)]
@@ -32,6 +33,9 @@ pub enum SubCommand {
 
     #[command(subcommand)]
     Text(TextOps),
+
+    #[command(subcommand)]
+    Jwt(JwtOpts),
 }
 
 fn verify_input_file(filename: &str) -> Result<String, &'static str> {
