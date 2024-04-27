@@ -1,11 +1,14 @@
 use clap::Parser;
 use rcli::{
-    process_base64, process_csv, process_jwt, process_passgen, process_text, RCli, SubCommand,
+    process_base64, process_csv, process_http_file, process_jwt, process_passgen, process_text,
+    sign, verify, RCli, SubCommand, TextSignVerifyOpt,
 };
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     let cli: RCli = RCli::parse();
 
+    tracing_subscriber::fmt::init();
     match cli.command {
         SubCommand::Csv(cli) => {
             // 如果是output的话 直接clone
@@ -27,6 +30,11 @@ fn main() -> anyhow::Result<()> {
         }
         SubCommand::Text(text_opts) => process_text(&text_opts)?,
         SubCommand::Jwt(jwt_opts) => process_jwt(&jwt_opts)?,
+        SubCommand::Http(http_opts) => process_http_file(&http_opts).await?,
+        SubCommand::Sign(sign_opts) => match sign_opts {
+            TextSignVerifyOpt::Encrypt(encrypt) => println!("加密为{:?}", sign(&encrypt)?),
+            TextSignVerifyOpt::Decrypt(decrypt) => verify(&decrypt)?,
+        },
     }
     Ok(())
 }

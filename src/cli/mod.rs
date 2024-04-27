@@ -1,18 +1,21 @@
 mod b64;
 mod csv_opt;
 mod gen_passwd;
+mod http_file;
 mod jwt;
+mod sign;
 mod text;
-use std::path::Path;
 
 pub use b64::{B64Format, B64Ops};
 use clap::Parser;
 pub use csv_opt::Commands;
 pub use csv_opt::Format;
 pub use gen_passwd::GenPassOps;
+pub use http_file::HttpFileOpts;
 pub use jwt::{JwtOpts, JwtSignOpt, JwtVerifyOpt};
+pub use sign::{SignOpts, TextSignVerifyOpt, VerifyOpts};
+use std::path::Path;
 pub use text::{TextFormat, TextOps, TextSignOpts, TextVerifyOpts};
-
 #[derive(Parser, Debug)]
 #[command(name = "rCli",version, about,author, long_about = None)]
 pub struct RCli {
@@ -37,6 +40,11 @@ pub enum SubCommand {
     /// rCli jwt verify -t
     #[command(subcommand)]
     Jwt(JwtOpts),
+
+    #[command(name = "http", about = "download file from http")]
+    Http(HttpFileOpts),
+    #[command(subcommand)]
+    Sign(TextSignVerifyOpt),
 }
 
 fn verify_input_file(filename: &str) -> Result<String, &'static str> {
