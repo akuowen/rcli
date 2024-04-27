@@ -33,7 +33,8 @@ pub enum SubCommand {
 
     #[command(subcommand)]
     Text(TextOps),
-
+    /// rCli jwt sign --sub acme --aud device1 --exp 14d
+    /// rCli jwt verify -t
     #[command(subcommand)]
     Jwt(JwtOpts),
 }
