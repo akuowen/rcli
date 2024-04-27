@@ -1,3 +1,4 @@
+use crate::{process_passgen, CmdExecutor};
 use clap::Parser;
 
 #[derive(Debug, Parser)]
@@ -12,4 +13,10 @@ pub struct GenPassOps {
     pub number: bool,
     #[arg(long, default_value_t = true)]
     pub symbol: bool,
+}
+
+impl CmdExecutor for GenPassOps {
+    async fn execute(self) -> anyhow::Result<()> {
+        process_passgen(&self).await
+    }
 }

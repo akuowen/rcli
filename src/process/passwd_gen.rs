@@ -8,7 +8,7 @@ const LOWER: &[u8] = b"abcdefghijklmnopqrstuvwxyz";
 const NUMBER: &[u8] = b"0123456789";
 const SYMBOL: &[u8] = b"!@#$%^&*()_+-=[]{}|;:,.<>?/";
 
-pub fn process_passgen(opts: &GenPassOps) -> anyhow::Result<()> {
+pub async fn process_passgen(opts: &GenPassOps) -> anyhow::Result<()> {
     let mut rng = rand::thread_rng();
     let mut passwd: Vec<u8> = Vec::new();
     let mut chars = Vec::new();

@@ -3,7 +3,7 @@ use std::io::Read;
 use anyhow::{Ok, Result};
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
 
-use crate::{get_content, get_reader, TextFormat, TextOps};
+use crate::{get_content, get_reader, TextFormat, TextOps, TextSignOpts, TextVerifyOpts};
 
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
 /// 签名
@@ -104,7 +104,7 @@ impl Ed25519Ver {
     }
 }
 
-pub fn process_text(text_opts: &TextOps) -> Result<()> {
+pub async fn process_text(text_opts: &TextOps) -> Result<()> {
     match text_opts {
         TextOps::Sign(text_sign_opts) => {
             print!("{:?}", text_sign_opts);
@@ -135,4 +135,32 @@ pub fn process_text(text_opts: &TextOps) -> Result<()> {
             Ok(())
         }
     }
+}
+
+pub async fn process_text_sign(text_opts: &TextSignOpts) -> Result<()> {
+    print!("{:?}", text_opts);
+    let key_content = get_content(&text_opts.key)?;
+    let signer: Box<dyn TextSigner<_>> = match text_opts.format {
+        TextFormat::Blake3 => Box::new(Blake3::try_new(key_content)?),
+        TextFormat::Ed25519 => Box::new(Ed25519Sign::try_new(key_content)?),
+    };
+    println!(
+        "{:?}",
+        URL_SAFE_NO_PAD.encode(signer.sign(get_reader(&text_opts.input)?)?)
+    );
+    Ok(())
+}
+
+pub async fn process_text_verify(text_opts: &TextVerifyOpts) -> Result<()> {
+    print!("{:?}", text_opts);
+    let key_content = get_content(&text_opts.key)?;
+    let signer: Box<dyn TextSigner<_>> = match text_opts.format {
+        TextFormat::Blake3 => Box::new(Blake3::try_new(key_content)?),
+        TextFormat::Ed25519 => Box::new(Ed25519Sign::try_new(key_content)?),
+    };
+    println!(
+        "{:?}",
+        URL_SAFE_NO_PAD.encode(signer.sign(get_reader(&text_opts.input)?)?)
+    );
+    Ok(())
 }

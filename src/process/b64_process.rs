@@ -6,14 +6,14 @@ use base64::{
     engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD},
     Engine as _,
 };
-pub fn process_base64(b64_opts: &B64Ops) -> Result<()> {
+pub async fn process_base64(b64_opts: &B64Ops) -> Result<()> {
     match b64_opts {
-        B64Ops::Decode(b64_opts) => process_decode(&b64_opts.input, b64_opts.format),
-        B64Ops::Encode(b64_opts) => process_encode(&b64_opts.input, b64_opts.format),
+        B64Ops::Decode(b64_opts) => process_decode(&b64_opts.input, b64_opts.format).await,
+        B64Ops::Encode(b64_opts) => process_encode(&b64_opts.input, b64_opts.format).await,
     }
 }
 /// 解码
-fn process_decode(input: &str, format: B64Format) -> Result<()> {
+pub async fn process_decode(input: &str, format: B64Format) -> Result<()> {
     let mut reader = get_reader(input)?;
     let mut buf = String::new();
     reader.read_to_string(&mut buf)?;
@@ -30,7 +30,7 @@ fn process_decode(input: &str, format: B64Format) -> Result<()> {
 }
 
 /// 编码
-fn process_encode(input: &str, format: B64Format) -> Result<()> {
+pub async fn process_encode(input: &str, format: B64Format) -> Result<()> {
     let mut reader = get_reader(input)?;
     let mut buf = String::new();
     reader.read_to_string(&mut buf)?;
@@ -55,17 +55,17 @@ fn get_reader(input: &str) -> Result<Box<dyn Read>> {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_process_encode() {
+    #[tokio::test]
+    async fn test_process_encode() {
         let input = "Cargo.toml";
         let format = B64Format::Standard;
-        assert!(process_encode(input, format).is_ok());
+        assert!(process_encode(input, format).await.is_ok());
     }
 
-    #[test]
-    fn test_process_decode() {
+    #[tokio::test]
+    async fn test_process_decode() {
         let input = "assets/b64.txt";
         let format = B64Format::Standard;
-        process_decode(input, format).unwrap();
+        process_decode(input, format).await.unwrap()
     }
 }

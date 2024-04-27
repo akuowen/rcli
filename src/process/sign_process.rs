@@ -11,7 +11,7 @@ use chacha20poly1305::{
 
 /// 加密
 
-pub fn sign(sign_opts: &SignOpts) -> Result<std::string::String> {
+pub async fn sign(sign_opts: &SignOpts) -> Result<std::string::String> {
     let input = &sign_opts.input;
     let sign_key = Key::clone_from_slice(&str_to_u8_32(&sign_opts.key));
     let cipher = ChaCha20Poly1305::new(&sign_key);
@@ -30,7 +30,7 @@ pub fn sign(sign_opts: &SignOpts) -> Result<std::string::String> {
     Ok(URL_SAFE_NO_PAD.encode(result))
 }
 
-pub fn verify(verify_opts: &VerifyOpts) -> Result<()> {
+pub async fn verify(verify_opts: &VerifyOpts) -> Result<()> {
     println!("verify token{:?}", &verify_opts.input);
     // let token_vec = URL_SAFE_NO_PAD.decode(&verify_opts.input);
     let ciphertext_bytes = URL_SAFE_NO_PAD.decode(&verify_opts.input)?;
@@ -67,38 +67,38 @@ mod tests {
 
     use super::*;
 
-    #[test]
-    fn test_all() {
+    #[tokio::test]
+    async fn test_all() {
         let text_sign_opts = SignOpts {
             key: "akuo".to_string(),
             input: "akuowen".to_string(),
         };
-        let sign_result = sign(&text_sign_opts).unwrap();
+        let sign_result = sign(&text_sign_opts).await.unwrap();
 
         let verify_opts = VerifyOpts {
             key: "akuo".to_string(),
             input: sign_result,
         };
 
-        let _ = verify(&verify_opts);
+        let _ = verify(&verify_opts).await;
     }
 
-    #[test]
-    fn test_sign() {
+    #[tokio::test]
+    async fn test_sign() {
         let text_sign_opts = SignOpts {
             key: "akuo".to_string(),
             input: "akuowen".to_string(),
         };
-        let _ = sign(&text_sign_opts);
+        let _ = sign(&text_sign_opts).await;
     }
 
-    #[test]
-    fn test_verify() {
+    #[tokio::test]
+    async fn test_verify() {
         let verify_opts = VerifyOpts {
             key: "aku".to_string(),
             input: "N47xi0WZxnwl5DtZZKmHQ4Ioqy-K20RhNqVQ1tjCp8oJzbs".to_string(),
         };
 
-        let _ = verify(&verify_opts);
+        let _ = verify(&verify_opts).await;
     }
 }

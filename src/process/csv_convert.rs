@@ -11,7 +11,7 @@ struct Data {
     data: Vec<Value>,
 }
 
-pub fn process_csv(input: &str, output: &str, output_format: Format) -> Result<()> {
+pub async fn process_csv(input: &str, output: &str, output_format: Format) -> Result<()> {
     let mut reader = Reader::from_path(input)?;
     let mut result_vec = Vec::with_capacity(128);
     let headers = reader.headers()?.clone();

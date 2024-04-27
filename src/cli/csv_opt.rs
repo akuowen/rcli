@@ -1,5 +1,6 @@
 use std::{fmt, path::Path, str::FromStr};
 
+use crate::{process_csv, CmdExecutor};
 use clap::Parser;
 
 #[derive(Debug, Parser)]
@@ -9,13 +10,19 @@ pub struct Commands {
     #[arg(short,long,value_parser=verity_input_path)]
     pub input: String,
     #[arg(short, long)]
-    pub output: Option<String>,
+    pub output: String,
     #[arg(short = 'H', long, default_value_t = true)]
     pub header: bool,
     #[arg(short, long, default_value_t = ',')]
     pub delimiter: char,
     #[arg(long,default_value="json" ,value_parser = format_parse)]
     pub format: Format,
+}
+
+impl CmdExecutor for Commands {
+    async fn execute(self) -> anyhow::Result<()> {
+        process_csv(&self.input, self.output.as_str(), self.format).await
+    }
 }
 
 fn verity_input_path(file_path: &str) -> Result<String, &'static str> {

@@ -9,7 +9,6 @@ async fn file_handler(
     Path(path): Path<String>,
 ) -> (StatusCode, Html<String>) {
     // string::
-    println!("===>{:?}", path);
     file_handler_self(State(state), Path(path)).await.unwrap()
 }
 
@@ -39,7 +38,7 @@ pub async fn process_http_file(http_file_opts: &HttpFileOpts) -> Result<()> {
     Ok(())
 }
 
-// TODO 优化列表生成    优化静态文件读取路径 使用tower-http读取静态文件
+// DONE 优化列表生成    优化静态文件读取路径 使用tower-http读取静态文件
 async fn file_handler_self(
     State(state): State<Arc<FilePth>>,
     Path(path): Path<String>,
@@ -61,13 +60,11 @@ async fn file_handler_self(
 
             if file_type.is_file() || file_type.is_dir() {
                 let all_path = entry.path().as_path().to_str().unwrap().to_string();
-                println!("all_path:{:?}", all_path);
                 let path: String = if file_type.is_file() {
                     format!("../static{}", all_path.trim_start_matches('.'))
                 } else {
                     format!(".{}", all_path)
                 };
-                println!("path: {:?}", path);
                 let file_url = format!(
                     "<a href=\"{}\">{}</a><br>",
                     path,

@@ -1,7 +1,15 @@
 use std::{fmt, path::Path, str::FromStr};
 
+use crate::{process_text_sign, process_text_verify, CmdExecutor};
 use clap::{arg, Parser};
+use enum_dispatch::enum_dispatch;
 
+/// chacha20poly1305 加解密
+/// 需要密钥 随机值  和 加密值
+/// 由于解密只有一个加密结果和密钥值  所以将 加密步骤的随机数字nonce 以6自己为一部分 拆分放在加密结果数组前后
+/// base64(nonce(0-6)  解密结果  nonce(7-12))
+/// 以此确保加解密随机值一致
+#[enum_dispatch(CmdExecutor)]
 #[derive(Debug, Parser)]
 pub enum TextOps {
     #[command(about = "Sign a text with a private/session key and return a signature")]
@@ -20,6 +28,12 @@ pub struct TextSignOpts {
     pub format: TextFormat,
 }
 
+impl CmdExecutor for TextSignOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        process_text_sign(&self).await
+    }
+}
+
 #[derive(Debug, Parser)]
 pub struct TextVerifyOpts {
     #[arg(short,long,value_parser=verify_file, default_value = "-")]
@@ -30,6 +44,12 @@ pub struct TextVerifyOpts {
     pub sig: String,
     #[arg(long, default_value = "blake3", value_parser = parse_text_sign_format)]
     pub format: TextFormat,
+}
+
+impl CmdExecutor for TextVerifyOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        process_text_verify(&self).await
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
