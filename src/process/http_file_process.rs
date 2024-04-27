@@ -60,15 +60,21 @@ async fn file_handler_self(
             let file_type = entry.file_type()?;
 
             if file_type.is_file() || file_type.is_dir() {
+                let all_path = entry.path().as_path().to_str().unwrap().to_string();
+                println!("all_path:{:?}", all_path);
+                let path: String = if file_type.is_file() {
+                    format!("../static{}", all_path.trim_start_matches('.'))
+                } else {
+                    format!(".{}", all_path)
+                };
+                println!("path: {:?}", path);
                 let file_url = format!(
                     "<a href=\"{}\">{}</a><br>",
-                    entry.path().as_path().to_str().unwrap(),
+                    path,
                     entry.path().as_path().to_str().unwrap()
                 );
                 path_vec.push(file_url);
             }
-
-            println!("{:?}", entry.path());
 
             Ok(())
         })?;
