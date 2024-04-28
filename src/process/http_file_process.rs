@@ -48,10 +48,8 @@ async fn file_handler_self(
     if !p.exists() {
         return Ok((StatusCode::NOT_FOUND, Html("file not found".to_string())));
     }
-
     let mut path_vec = Vec::new();
     let parent = format!("../{}", String::from(path.rsplitn(2, '/').last().unwrap()));
-
     path_vec.push(format!("<a href=\"{}\">..</a><br>", parent));
     if p.is_dir() {
         p.read_dir()?.try_for_each(|entry| {
@@ -59,17 +57,18 @@ async fn file_handler_self(
             let file_type = entry.file_type()?;
 
             if file_type.is_file() || file_type.is_dir() {
-                let all_path = entry.path().as_path().to_str().unwrap().to_string();
                 let path: String = if file_type.is_file() {
-                    format!("../static{}", all_path.trim_start_matches('.'))
+                    format!("/static/{}/{}", path, entry.file_name().to_str().unwrap())
                 } else {
-                    format!(".{}", all_path)
+                    format!("/{}/{}", path, entry.file_name().to_str().unwrap())
                 };
+                tracing::info!("all_path:{}", &path);
                 let file_url = format!(
                     "<a href=\"{}\">{}</a><br>",
                     path,
-                    entry.path().as_path().to_str().unwrap()
+                    entry.file_name().to_str().unwrap()
                 );
+
                 path_vec.push(file_url);
             }
 
